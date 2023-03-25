@@ -9,6 +9,7 @@ export default function App() {
   const [state, dispatch] = useReducer(AppReducer, "");
   return (
     <AudioContext.Provider value={{ state, dispatch }}>
+      {/* no need to change context just add navigation below this line */}
       <View style={styles.container}>
         <AudioListingScreen />
       </View>

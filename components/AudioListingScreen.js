@@ -5,19 +5,21 @@ import AudioContext from "../context/appContext";
 import * as MediaLibrary from "expo-media-library";
 
 const AudioListingScreen = () => {
-  const context = useContext(AudioContext);
+  const { state, dispatch } = useContext(AudioContext);
 
-  console.log("assets", context);
   useEffect(() => {
     getPermissions();
   }, []);
 
   const getPermissions = async () => {
     const resp = await MediaLibrary.requestPermissionsAsync();
-    const { granted, canAskAgain } = await MediaLibrary.getPermissionsAsync();
-    if (granted) {
-      console.log("granted permission");
-    } else if (canAskAgain) {
+    if (resp.granted) {
+      const assets = await MediaLibrary.getAssetsAsync({
+        mediaType: "audio",
+        sortBy: "creationTime",
+      });
+      dispatch({ payload: assets["assets"], type: "ADD_ASSET" });
+    } else if (resp.canAskAgain) {
       console.log("permissions are mandatory");
     }
   };
